@@ -4,21 +4,29 @@ const producer = kafka.producer();
 
 const produceUserRegisteredEvent = async (data) => {
   await producer.connect();
+  const producedData={
+    dataReceived:data,
+    retryCount:0
+  }
   await producer.send({
     topic: 'user-registered',
     messages: [
-      { value: JSON.stringify(data) },
+      { value: JSON.stringify(producedData) },
     ],
   });
   await producer.disconnect();
 };
 
-const produceUserUpdatedEvent = async (userId,data) => {
+const produceUserUpdatedEvent = async (data) => {
   await producer.connect();
+  const producedData={
+    dataReceived:data,
+    retryCount:0
+  }
   await producer.send({
     topic: 'user-updated',
     messages: [
-      { value: JSON.stringify({userId,data}) },
+      { value: JSON.stringify(producedData) },
     ],
   });
   await producer.disconnect();

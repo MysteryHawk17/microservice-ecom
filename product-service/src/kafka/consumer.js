@@ -1,5 +1,6 @@
 const kafka = require("./kafka");
 const { inventoryUpdateOrder } = require("../services/productService");
+const { produceDLQEvent } = require("./producer");
 
 const consumer = kafka.consumer({ groupId: "product-service-group" });
 
@@ -36,7 +37,7 @@ const runConsumer = async () => {
           console.log(`Processing message from topic ${topic}:`, value);
 
           // Process the message
-          await processMessage(topic, value);
+          await processMessage(topic, value.dataReceived);
 
           success = true;
           console.log(`Successfully processed message from topic ${topic}`);
@@ -52,6 +53,8 @@ const runConsumer = async () => {
               `Max retries reached for message from topic ${topic}. Skipping message:`,
               value
             );
+            value['originalTopic'] = topic;
+            produceDLQEvent(value);
             break;
           }
 

@@ -125,7 +125,7 @@ const updateUser = async (userId, userData) => {
   }
   //send the event to the event bus
   if (Object.keys(userUpdatedData).length > 0) {
-    await produceUserUpdatedEvent(userId, userUpdatedData);
+    await produceUserUpdatedEvent({userId, userUpdatedData});
   }
   return updatedUser;
 };

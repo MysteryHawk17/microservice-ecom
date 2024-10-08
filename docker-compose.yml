@@ -40,7 +40,8 @@ services:
         kafka-topics --create --topic user-updated --partitions 1 --replication-factor 1 --if-not-exists --zookeeper zookeeper:2181 &&
         kafka-topics --create --topic product-created --partitions 1 --replication-factor 1 --if-not-exists --zookeeper zookeeper:2181 &&
         kafka-topics --create --topic order-placed --partitions 1 --replication-factor 1 --if-not-exists --zookeeper zookeeper:2181 &&
-        kafka-topics --create --topic inventory-updated --partitions 1 --replication-factor 1 --if-not-exists --zookeeper zookeeper:2181"
+        kafka-topics --create --topic inventory-updated --partitions 1 --replication-factor 1 --if-not-exists --zookeeper zookeeper:2181
+        kafka-topics --create --topic dlq-topic --partitions 1 --replication-factor 1 --if-not-exists --zookeeper zookeeper:2181"
     
   mongodb:
     image: mongo:latest
@@ -50,6 +51,19 @@ services:
     volumes:
       - mongodb_data:/data/db
 
+  dlq-service:
+    build: "./dlq-service"
+    ports:
+      - 8000:8000
+    depends_on:
+      kafka:
+        condition: service_healthy
+    environment:
+      KAFKA_BROKER: kafka:29092
+      
+    container_name: dlq-service
+
+
   user-service:
     build: "./user-service"
     ports:
@@ -58,6 +72,8 @@ services:
       kafka:
         condition: service_healthy
       mongodb:
+        condition: service_started
+      dlq-service:
         condition: service_started
     environment:
       MONGO_URI: mongodb://mongodb:27017/userdb
@@ -77,6 +93,8 @@ services:
         condition: service_healthy
       mongodb:
         condition: service_started
+      dlq-service:
+        condition: service_started
     environment:
       MONGO_URI: mongodb://mongodb:27017/productdb
       KAFKA_BROKER: kafka:29092
@@ -95,6 +113,8 @@ services:
       kafka:
         condition: service_healthy
       mongodb:
+        condition: service_started
+      dlq-service:
         condition: service_started
     env_file:
       - ./order-service/.env
