@@ -3,7 +3,10 @@
 ## Overview
 The DLQ (Dead Letter Queue) Handling Service is responsible for managing messages that fail processing in our Kafka-based microservices architecture. It implements retry mechanisms and provides options for manual review of persistently failing messages.
 
-### Key Features
+## Flow Diagram
+![Flow Diagram DLQ](image.png)
+
+## Key Features
 - Consumption of messages from a dedicated DLQ topic
 - Retry mechanism with exponential backoff
 - Custom message processing logic

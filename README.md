@@ -3,6 +3,10 @@
 ## Overview
 This project is a microservices-based e-commerce application consisting of User Service, Product Service, Order Service, and a GraphQL Gateway. It uses Kafka for event-driven communication between services and MongoDB for data storage.
 
+
+## Flow Diagram
+![Flow Diagram of Application](image.png)
+
 ## Key Features
 - User registration and authentication
 - Product management and inventory
