@@ -33,8 +33,8 @@ This project is a microservices-based e-commerce application consisting of User 
 
 1. Clone the repository:
    ```
-   git clone https://github.com/MysteryHawk17/microservice-pratillipi-assignment
-   cd microservice-pratillipi-assignment
+   git clone https://github.com/MysteryHawk17/microservice-ecom
+   cd microservice-ecom
    ```
 
 2. Start the services:
